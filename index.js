@@ -30,6 +30,7 @@ client.connect((err) => {
     .db(`${process.env.DB_NAME}`)
     .collection("doctors");
 
+    //this api used for add appointment of patient
   app.post("/addAppointments", (req, res) => {
     const appointment = req.body;
     appointmentsCollection.insertOne(appointment).then((result) => {
@@ -37,6 +38,7 @@ client.connect((err) => {
     });
   });
 
+  //this api for show appointments by date
   app.post("/appointmentsByDate", (req, res) => {
     const date = req.body;
     const email = req.body.email;
@@ -47,12 +49,12 @@ client.connect((err) => {
       }
 
       appointmentsCollection.find(filter).toArray((err, documents) => {
-        console.log(documents);
         res.send(documents);
       });
     });
   });
 
+  //this api for verify doctor service
   app.post('/isDoctors', (req, res) => {
     const email = req.body.email
     doctorsCollection.find({ email: email})
@@ -62,12 +64,14 @@ client.connect((err) => {
 
   })
 
+  //this is all patient list
   app.get("/allPatient", (req, res) => {
     appointmentsCollection.find({}).toArray((err, result) => {
       res.send(result);
     });
   });
 
+  //this api for admin who add doctor
   app.post("/addDoctors", (req, res) => {
     const file = req.files.file;
     const name = req.body.name;
@@ -82,10 +86,10 @@ client.connect((err) => {
         .then((result) => {
           res.send(result.insertedCount > 0);
         });
-      // return res.send({name : file.name, path : `/${file.name}`})
     });
   });
 
+  //get doctors
   app.get("/doctors", (req, res) => {
     doctorsCollection.find({}).toArray((err, result) => {
       res.send(result);
